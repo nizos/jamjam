@@ -24,6 +24,8 @@ This is a FigJam project that will be developed with Claude Code assistance usin
 - Use Playwright-MCP for integration tests
 - Ensure tests are descriptive and test behavior, not implementation
 - Keep tests focused and independent
+- Use parameterized tests (it.each) when testing multiple similar scenarios to reduce duplication
+- Refactor tests after implementation to use parameterized testing where applicable
 
 ### Implementation Approach
 - Plan implementation by value
