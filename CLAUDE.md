@@ -53,13 +53,16 @@ This is a FigJam project that will be developed with Claude Code assistance usin
 - `/node_modules` - Dependencies (ignored)
 
 ### Commands
-- `npm test` - Run all tests
-- `npm run test:unit` - Run unit tests
-- `npm run test:integration` - Run integration tests
+- `npm test` - Run all tests in watch mode
+- `npm run test:unit` - Run unit tests once
+- `npm run test:coverage` - Run tests with coverage report
+- `npm run test:integration` - Run integration tests with Playwright
 - `npm run build` - Build the project
-- `npm run lint` - Run linter
-- `npm run format` - Run formatter
-- `npm run typecheck` - Run type checking
+- `npm run lint` - Run ESLint
+- `npm run format` - Format code with Prettier
+- `npm run format:check` - Check code formatting
+- `npm run typecheck` - Run TypeScript type checking
+- `npm run pre-commit` - Run all checks (format, lint, typecheck, unit tests)
 
 ### Dependencies
 - Minimize external dependencies

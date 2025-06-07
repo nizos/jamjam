@@ -1,0 +1,25 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "jamjam",
+    "konva",
+    "vitest",
+    "vite",
+    "zustand",
+    "figjam",
+    "whiteboard",
+    "whiteboarding",
+    "claudeignore",
+    "playwright"
+  ],
+  "ignorePaths": [
+    "node_modules",
+    "dist",
+    "coverage",
+    ".git",
+    "package-lock.json",
+    "yarn.lock",
+    "pnpm-lock.yaml"
+  ]
+}
