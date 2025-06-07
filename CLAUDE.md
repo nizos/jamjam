@@ -80,3 +80,8 @@ This is a FigJam project that will be developed with Claude Code assistance usin
 - Focus on user experience and performance
 - Ensure accessibility compliance
 - Build incrementally based on user value
+
+## Project Documentation
+- Architecture: See `/docs/architecture.md` for system design
+- Tasks: See `/tasks/todo.md` for implementation tasks
+- Follow the architecture patterns and interfaces defined in these documents
