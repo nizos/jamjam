@@ -36,4 +36,34 @@ export class Bounds {
       this.position.y + this.size.height
     )
   }
+
+  intersects(other: Bounds): boolean {
+    const thisLeft = this.position.x
+    const thisRight = this.position.x + this.size.width
+    const thisTop = this.position.y
+    const thisBottom = this.position.y + this.size.height
+
+    const otherLeft = other.position.x
+    const otherRight = other.position.x + other.size.width
+    const otherTop = other.position.y
+    const otherBottom = other.position.y + other.size.height
+
+    return !(
+      thisRight <= otherLeft ||
+      thisLeft >= otherRight ||
+      thisBottom <= otherTop ||
+      thisTop >= otherBottom
+    )
+  }
+
+  translate(offset: Point): Bounds {
+    return new Bounds(this.position.add(offset), this.size)
+  }
+
+  expand(amount: number): Bounds {
+    return new Bounds(
+      new Point(this.position.x - amount, this.position.y - amount),
+      new Size(this.size.width + 2 * amount, this.size.height + 2 * amount)
+    )
+  }
 }
