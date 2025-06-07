@@ -7,10 +7,13 @@ This is a FigJam project that will be developed with Claude Code assistance usin
 
 ### Test-Driven Development (TDD)
 - **Always** test-drive changes starting with a test that fails for the right reason
+- Write ONE test at a time - don't write multiple tests upfront
+- Ensure test infrastructure works (imports, setup) before testing actual behavior
 - Run the test to ensure it fails before implementing
 - Implement the minimum code necessary to make the test pass
 - Once the test passes, refactor both test and implementation code
 - Introduce changes only using TDD
+- Repeat: write next failing test, make it pass, refactor
 
 ### Testing Strategy
 - Write meaningful tests using dependency injection over mocking
