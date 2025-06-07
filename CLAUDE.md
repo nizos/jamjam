@@ -9,7 +9,11 @@ This is a FigJam project that will be developed with Claude Code assistance usin
 - **Always** test-drive changes starting with a test that fails for the right reason
 - Write ONE test at a time - don't write multiple tests upfront
 - Ensure test infrastructure works (imports, setup) before testing actual behavior
-- Run the test to ensure it fails before implementing
+- Run the test to ensure it fails for the right reason before implementing
+- Create stub implementations (empty methods, undefined properties) so tests can execute
+- Tests should fail on assertions, not on missing methods/properties
+- Example of wrong failure: "TypeError: point.add is not a function"
+- Example of right failure: "AssertionError: expected undefined to be 15"
 - Implement the minimum code necessary to make the test pass
 - Once the test passes, refactor both test and implementation code
 - Introduce changes only using TDD
