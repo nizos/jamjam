@@ -18,7 +18,8 @@
     "dependabot",
     "lcov",
     "unittests",
-    "nizos"
+    "nizos",
+    "CODEOWNERS"
   ],
   "ignorePaths": [
     "node_modules",
