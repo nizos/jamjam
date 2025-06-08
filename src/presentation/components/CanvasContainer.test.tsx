@@ -3,6 +3,7 @@ import { render } from '@testing-library/react'
 import { CanvasContainer } from './CanvasContainer'
 import { useCanvasStore } from '../../infrastructure/stores/CanvasStore'
 import Konva from 'konva'
+import { setupKonvaContainer } from '../../test/utils/konva'
 
 describe('CanvasContainer', () => {
   beforeEach(() => {
@@ -52,15 +53,7 @@ describe('CanvasContainer', () => {
 })
 
 function setupCanvasContainer(width = 800, height = 600) {
-  // Canvas requires a valid container with dimensions
-  Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
-    configurable: true,
-    value: width,
-  })
-  Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
-    configurable: true,
-    value: height,
-  })
+  setupKonvaContainer(width, height)
 
   const { container } = render(<CanvasContainer />)
   const stage = Konva.stages[Konva.stages.length - 1]

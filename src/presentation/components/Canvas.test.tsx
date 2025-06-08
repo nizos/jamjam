@@ -4,6 +4,7 @@ import { Canvas } from './Canvas'
 import { useCanvasStore } from '../../infrastructure/stores/CanvasStore'
 import { Point } from '../../domain/canvas/Point'
 import Konva from 'konva'
+import { setupKonvaContainer } from '../../test/utils/konva'
 
 describe('Canvas', () => {
   let container: HTMLElement
@@ -114,18 +115,15 @@ describe('Canvas', () => {
       })
     })
   })
+
+  it('should render a grid', () => {
+    const lines = stage.find('Line')
+    expect(lines.length).toBeGreaterThan(0)
+  })
 })
 
 function setupCanvas(width = 800, height = 600) {
-  // Canvas requires a valid container with dimensions
-  Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
-    configurable: true,
-    value: width,
-  })
-  Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
-    configurable: true,
-    value: height,
-  })
+  setupKonvaContainer(width, height)
 
   const onPan = vi.fn()
   const onZoom = vi.fn()

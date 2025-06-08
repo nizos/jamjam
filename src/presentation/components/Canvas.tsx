@@ -1,6 +1,7 @@
 import { Stage, Layer } from 'react-konva'
 import { useCanvasStore } from '../../infrastructure/stores/CanvasStore'
 import type Konva from 'konva'
+import { Grid } from './Grid'
 
 interface CanvasProps {
   width?: number
@@ -61,7 +62,9 @@ export function Canvas({
       onDragEnd={handleDragEnd}
       onWheel={handleWheel}
     >
-      <Layer />
+      <Layer>
+        <Grid />
+      </Layer>
     </Stage>
   )
 }
