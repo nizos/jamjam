@@ -4,10 +4,19 @@ import { Point } from '../../domain/canvas/Point'
 
 export function CanvasContainer() {
   const pan = useCanvasStore((state) => state.pan)
+  const zoomTo = useCanvasStore((state) => state.zoomTo)
+  const zoom = useCanvasStore((state) => state.canvas.zoom)
 
   const handlePan = (position: { x: number; y: number }) => {
     pan(new Point(position.x, position.y))
   }
 
-  return <Canvas onPan={handlePan} />
+  const handleZoom = (event: {
+    factor: number
+    position: { x: number; y: number }
+  }) => {
+    zoomTo(zoom * event.factor)
+  }
+
+  return <Canvas onPan={handlePan} onZoom={handleZoom} />
 }

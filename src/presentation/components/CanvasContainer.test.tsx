@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render } from '@testing-library/react'
 import { CanvasContainer } from './CanvasContainer'
 import { useCanvasStore } from '../../infrastructure/stores/CanvasStore'
@@ -30,6 +30,23 @@ describe('CanvasContainer', () => {
     it('should update store y position', () => {
       const canvasState = useCanvasStore.getState().canvas
       expect(canvasState.viewport.position.y).toBe(50)
+    })
+  })
+
+  describe('when canvas is zoomed', () => {
+    it('should update store zoom factor', () => {
+      const { stage } = setupCanvasContainer()
+
+      const wheelEvent = {
+        evt: {
+          deltaY: -100,
+          preventDefault: vi.fn(),
+        },
+      }
+      stage.fire('wheel', wheelEvent)
+
+      const canvasState = useCanvasStore.getState().canvas
+      expect(canvasState.zoom).toBe(1.1)
     })
   })
 })

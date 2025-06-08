@@ -10,11 +10,12 @@ describe('Canvas', () => {
   let canvas: HTMLCanvasElement | null
   let stage: Konva.Stage
   let onPan: ReturnType<typeof vi.fn>
+  let onZoom: ReturnType<typeof vi.fn>
 
   beforeEach(() => {
     // Reset canvas store to initial state
     useCanvasStore.getState().reset()
-    ;({ container, canvas, stage, onPan } = setupCanvas())
+    ;({ container, canvas, stage, onPan, onZoom } = setupCanvas())
   })
 
   it('should render canvas element', () => {
@@ -67,6 +68,52 @@ describe('Canvas', () => {
       expect(onPan).toHaveBeenCalledWith({ x: 100, y: 50 })
     })
   })
+
+  describe('zoom interaction', () => {
+    it('should scale stage based on zoom from store', () => {
+      useCanvasStore.getState().zoomTo(2)
+      const { stage } = setupCanvas()
+
+      expect(stage.scaleX()).toBe(2)
+    })
+
+    it('should scale y same as x for uniform zoom', () => {
+      useCanvasStore.getState().zoomTo(1.5)
+      const { stage } = setupCanvas()
+
+      expect(stage.scaleY()).toBe(1.5)
+    })
+
+    it('should call onZoom when wheel event occurs', () => {
+      const wheelEvent = {
+        evt: {
+          deltaY: -100,
+          preventDefault: vi.fn(),
+        },
+      }
+      stage.fire('wheel', wheelEvent)
+
+      expect(onZoom).toHaveBeenCalledWith({
+        factor: 1.1,
+        position: { x: 0, y: 0 },
+      })
+    })
+
+    it('should zoom out when wheel scrolls down', () => {
+      const wheelEvent = {
+        evt: {
+          deltaY: 100,
+          preventDefault: vi.fn(),
+        },
+      }
+      stage.fire('wheel', wheelEvent)
+
+      expect(onZoom).toHaveBeenCalledWith({
+        factor: 1 / 1.1,
+        position: { x: 0, y: 0 },
+      })
+    })
+  })
 })
 
 function setupCanvas(width = 800, height = 600) {
@@ -81,11 +128,12 @@ function setupCanvas(width = 800, height = 600) {
   })
 
   const onPan = vi.fn()
+  const onZoom = vi.fn()
   const container = render(
-    <Canvas width={width} height={height} onPan={onPan} />
+    <Canvas width={width} height={height} onPan={onPan} onZoom={onZoom} />
   ).container
   const canvas = container.querySelector('canvas')
   const stage = Konva.stages[Konva.stages.length - 1]
 
-  return { container, canvas, stage, onPan }
+  return { container, canvas, stage, onPan, onZoom }
 }
