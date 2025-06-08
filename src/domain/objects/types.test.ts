@@ -12,7 +12,7 @@ describe('Style', () => {
     const style: Style = {
       fill: '#ffffff',
     }
-    
+
     expect(style.fill).toBe('#ffffff')
   })
 })
