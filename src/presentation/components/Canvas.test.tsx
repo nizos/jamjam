@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render } from '@testing-library/react'
 import { Canvas } from './Canvas'
 import { useCanvasStore } from '../../infrastructure/stores/CanvasStore'
@@ -9,28 +9,33 @@ describe('Canvas', () => {
   let container: HTMLElement
   let canvas: HTMLCanvasElement | null
   let stage: Konva.Stage
+  let onPan: ReturnType<typeof vi.fn>
 
   beforeEach(() => {
     // Reset canvas store to initial state
     useCanvasStore.getState().reset()
-    ;({ container, canvas, stage } = setupCanvas())
+    ;({ container, canvas, stage, onPan } = setupCanvas())
   })
 
-  it('should render without crashing', () => {
+  it('should render canvas element', () => {
     expect(container.firstChild).toBeDefined()
-  })
-
-  it('should create a canvas element', () => {
     expect(canvas).not.toBeNull()
   })
 
-  describe('with custom dimensions', () => {
-    it('should use provided width', () => {
-      expect(canvas?.width).toBe(1024)
+  describe('with default dimensions', () => {
+    it('should use default width', () => {
+      expect(canvas?.width).toBe(800)
     })
 
-    it('should use provided height', () => {
-      expect(canvas?.height).toBe(768)
+    it('should use default height', () => {
+      expect(canvas?.height).toBe(600)
+    })
+  })
+
+  describe('with custom dimensions', () => {
+    it('should use provided dimensions', () => {
+      const { canvas } = setupCanvas(1024, 768)
+      expect(canvas?.width).toBe(1024)
     })
   })
 
@@ -48,12 +53,24 @@ describe('Canvas', () => {
       expect(stage.y()).toBe(30)
     })
   })
+
+  describe('pan interaction', () => {
+    it('should make stage draggable', () => {
+      expect(stage.draggable()).toBe(true)
+    })
+
+    it('should call onPan when drag ends with stage position', () => {
+      // Simulate dragging stage to position (100, 50)
+      stage.position({ x: 100, y: 50 })
+      stage.fire('dragend')
+
+      expect(onPan).toHaveBeenCalledWith({ x: 100, y: 50 })
+    })
+  })
 })
 
-function setupCanvas(width = 1024, height = 768) {
+function setupCanvas(width = 800, height = 600) {
   // Canvas requires a valid container with dimensions
-  // In jsdom, we need to mock the container's offsetWidth/offsetHeight
-  // which Konva uses to determine if the container is ready
   Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
     configurable: true,
     value: width,
@@ -63,9 +80,12 @@ function setupCanvas(width = 1024, height = 768) {
     value: height,
   })
 
-  const container = render(<Canvas width={width} height={height} />).container
+  const onPan = vi.fn()
+  const container = render(
+    <Canvas width={width} height={height} onPan={onPan} />
+  ).container
   const canvas = container.querySelector('canvas')
   const stage = Konva.stages[Konva.stages.length - 1]
 
-  return { container, canvas, stage }
+  return { container, canvas, stage, onPan }
 }
