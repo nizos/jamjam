@@ -2,24 +2,18 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { render } from '@testing-library/react'
 import { Canvas } from './Canvas'
 import { useCanvasStore } from '../../infrastructure/stores/CanvasStore'
+import { Point } from '../../domain/canvas/Point'
+import Konva from 'konva'
 
 describe('Canvas', () => {
   let container: HTMLElement
+  let canvas: HTMLCanvasElement | null
+  let stage: Konva.Stage
 
   beforeEach(() => {
-    // Canvas requires a valid container with dimensions
-    Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
-      configurable: true,
-      value: 800,
-    })
-    Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
-      configurable: true,
-      value: 600,
-    })
     // Reset canvas store to initial state
     useCanvasStore.getState().reset()
-    // Render the canvas with default props
-    container = render(<Canvas />).container
+    ;({ container, canvas, stage } = setupCanvas())
   })
 
   it('should render without crashing', () => {
@@ -27,23 +21,51 @@ describe('Canvas', () => {
   })
 
   it('should create a canvas element', () => {
-    const canvas = container.querySelector('canvas')
     expect(canvas).not.toBeNull()
   })
 
   describe('with custom dimensions', () => {
-    beforeEach(() => {
-      container = render(<Canvas width={1024} height={768} />).container
-    })
-
     it('should use provided width', () => {
-      const canvas = container.querySelector('canvas')
       expect(canvas?.width).toBe(1024)
     })
 
     it('should use provided height', () => {
-      const canvas = container.querySelector('canvas')
       expect(canvas?.height).toBe(768)
     })
   })
+
+  describe('stage position from store', () => {
+    beforeEach(() => {
+      useCanvasStore.getState().pan(new Point(50, 30))
+      ;({ container, canvas, stage } = setupCanvas())
+    })
+
+    it('should set x position from viewport', () => {
+      expect(stage.x()).toBe(50)
+    })
+
+    it('should set y position from viewport', () => {
+      expect(stage.y()).toBe(30)
+    })
+  })
 })
+
+function setupCanvas(width = 1024, height = 768) {
+  // Canvas requires a valid container with dimensions
+  // In jsdom, we need to mock the container's offsetWidth/offsetHeight
+  // which Konva uses to determine if the container is ready
+  Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
+    configurable: true,
+    value: width,
+  })
+  Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+    configurable: true,
+    value: height,
+  })
+
+  const container = render(<Canvas width={width} height={height} />).container
+  const canvas = container.querySelector('canvas')
+  const stage = Konva.stages[Konva.stages.length - 1]
+
+  return { container, canvas, stage }
+}
