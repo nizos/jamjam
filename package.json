@@ -43,7 +43,7 @@
     "@playwright/mcp": "latest",
     "prettier": "^3.1.1",
     "typescript": "^5.2.2",
-    "vite": "^5.0.8",
+    "vite": "^6.3.5",
     "vitest": "^1.0.4"
   }
 }
