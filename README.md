@@ -1,5 +1,8 @@
 # JamJam - FigJam Project
 
+[![CI](https://github.com/nizos/jamjam/actions/workflows/ci.yml/badge.svg)](https://github.com/nizos/jamjam/actions/workflows/ci.yml)
+[![Security](https://github.com/nizos/jamjam/actions/workflows/security.yml/badge.svg)](https://github.com/nizos/jamjam/actions/workflows/security.yml)
+
 A collaborative whiteboarding tool built with Test-Driven Development practices.
 
 ## Project Setup

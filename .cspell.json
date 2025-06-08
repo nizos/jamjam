@@ -11,7 +11,14 @@
     "whiteboard",
     "whiteboarding",
     "claudeignore",
-    "playwright"
+    "playwright",
+    "autobuild",
+    "codeql",
+    "codecov",
+    "dependabot",
+    "lcov",
+    "unittests",
+    "nizos"
   ],
   "ignorePaths": [
     "node_modules",
