@@ -11,9 +11,12 @@ This is a FigJam project that will be developed with Claude Code assistance usin
 - **Always** test-drive changes starting with a test that fails for the right reason
 - Write ONE test at a time - don't write multiple tests upfront
 - **NEVER** create more than one test at a time - complete the full red-green-refactor cycle for each test
+- **Use only ONE assertion/expect per test** - each test should verify a single behavior
 - Ensure test infrastructure works (imports, setup) before testing actual behavior
 - Run the test to ensure it fails for the right reason before implementing
 - Create stub implementations (empty methods, undefined properties) so tests can execute
+- Implement ONLY the minimum code necessary to make the current test pass
+- Don't add properties, methods, or logic that aren't required by the current failing test
 - Tests should fail on assertions, not on missing methods/properties
 - Example of wrong failure: "TypeError: point.add is not a function"
 - Example of right failure: "AssertionError: expected undefined to be 15"
@@ -55,6 +58,23 @@ This is a FigJam project that will be developed with Claude Code assistance usin
 - Run integration tests
 - Ensure all tests pass
 - Commit frequently with atomic, logical changes
+
+### Git Commit Guidelines
+
+- **Split changes into meaningful commits** - don't mix different kinds of changes in the same commit
+- **Use Conventional Commits format**:
+  - `feat:` - New features or functionality
+  - `fix:` - Bug fixes
+  - `docs:` - Documentation changes
+  - `style:` - Code style changes (formatting, missing semicolons, etc.)
+  - `refactor:` - Code refactoring without changing functionality
+  - `test:` - Adding or modifying tests
+  - `chore:` - Maintenance tasks, dependency updates, build changes
+  - `perf:` - Performance improvements
+  - `ci:` - CI/CD configuration changes
+- **Focus commit messages on WHAT was introduced**, not the process (TDD is assumed)
+- **Keep commits atomic** - each commit should represent one logical change
+- **Write clear, concise commit messages** that explain the change, not the method
 
 ### Code Style
 
