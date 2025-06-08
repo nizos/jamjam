@@ -19,7 +19,7 @@
 
 ### UI Layer
 
-- [ ] Set up base Canvas component with Konva
+- [x] Set up base Canvas component with Konva
 - [ ] Implement pan interaction (drag to pan)
 - [ ] Implement zoom interaction (wheel to zoom)
 - [ ] Add canvas grid background
