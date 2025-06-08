@@ -1,5 +1,7 @@
+import { CanvasContainer } from './presentation/components/CanvasContainer'
+
 const App = () => {
-  return <div>JamJam</div>
+  return <CanvasContainer />
 }
 
 export default App
