@@ -7,7 +7,7 @@
 - [x] Create Point, Size, and Bounds value objects with tests
 - [x] Create CanvasObject base interface and tests
 - [x] Implement Canvas domain model with pan/zoom logic
-- [ ] Create coordinate transformation utilities
+- [x] Create coordinate transformation utilities
 - [ ] Implement viewport calculations
 
 ### State Management
