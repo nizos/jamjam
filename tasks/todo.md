@@ -4,8 +4,8 @@
 
 ### Domain Layer
 
-- [ ] Create Point, Size, and Bounds value objects with tests
-- [ ] Create CanvasObject base interface and tests
+- [x] Create Point, Size, and Bounds value objects with tests
+- [x] Create CanvasObject base interface and tests
 - [ ] Implement Canvas domain model with pan/zoom logic
 - [ ] Create coordinate transformation utilities
 - [ ] Implement viewport calculations
