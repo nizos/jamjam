@@ -5,11 +5,13 @@ A collaborative whiteboarding tool built with Test-Driven Development practices.
 ## Project Setup
 
 ### Prerequisites
+
 - Node.js (v18 or higher)
 - npm or yarn
 - Claude Code CLI (for AI-assisted development)
 
 ### Installation
+
 ```bash
 # Clone the repository
 git clone [repository-url]
@@ -29,6 +31,7 @@ This project follows strict Test-Driven Development (TDD) practices:
 4. Refactor both test and implementation code
 
 ### Available Scripts
+
 ```bash
 npm test              # Run all tests
 npm run test:unit     # Run unit tests

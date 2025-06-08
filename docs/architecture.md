@@ -95,19 +95,28 @@ interface SelectionManager {
 ```typescript
 // Immutable value objects
 class Point {
-  constructor(readonly x: number, readonly y: number) {}
+  constructor(
+    readonly x: number,
+    readonly y: number
+  ) {}
   add(other: Point): Point
   subtract(other: Point): Point
   scale(factor: number): Point
 }
 
 class Size {
-  constructor(readonly width: number, readonly height: number) {}
+  constructor(
+    readonly width: number,
+    readonly height: number
+  ) {}
   scale(factor: number): Size
 }
 
 class Bounds {
-  constructor(readonly position: Point, readonly size: Size) {}
+  constructor(
+    readonly position: Point,
+    readonly size: Size
+  ) {}
   contains(point: Point): boolean
   intersects(other: Bounds): boolean
 }
@@ -160,7 +169,7 @@ interface SelectionState {
 // Service container
 class ServiceContainer {
   private services = new Map<string, any>()
-  
+
   register<T>(token: string, factory: () => T): void
   resolve<T>(token: string): T
 }
@@ -181,12 +190,12 @@ describe('Selection', () => {
   it('should select objects', () => {
     const mockRenderer: ObjectRenderer = {
       render: jest.fn(),
-      updateVisualState: jest.fn()
+      updateVisualState: jest.fn(),
     }
-    
+
     const container = new ServiceContainer()
     container.register('ObjectRenderer', () => mockRenderer)
-    
+
     // Test with mocked dependencies
   })
 })
@@ -214,17 +223,20 @@ User Input → UI Component → Hook → Domain Action → State Update → UI U
 ## Testing Strategy
 
 ### Unit Tests (Domain Layer)
+
 - Test pure functions in isolation
 - No UI framework dependencies
 - Mock boundaries with interfaces
 - 100% coverage target
 
 ### Integration Tests (Application Layer)
+
 - Test hooks with React Testing Library
 - Test store interactions
 - Mock external dependencies
 
 ### E2E Tests (Presentation Layer)
+
 - Test user workflows with Playwright
 - Test visual feedback
 - Test keyboard interactions
@@ -233,12 +245,14 @@ User Input → UI Component → Hook → Domain Action → State Update → UI U
 ## Performance Considerations
 
 ### Rendering Optimization
+
 - Virtual rendering for objects outside viewport
 - Debounced updates for expensive operations
 - Layer caching for static content
 - Batched state updates
 
 ### Memory Management
+
 - Object pooling for frequent allocations
 - Weak references for event handlers
 - Cleanup on unmount
@@ -254,6 +268,7 @@ User Input → UI Component → Hook → Domain Action → State Update → UI U
 ## Future Extensibility
 
 ### Plugin System
+
 ```typescript
 interface Plugin {
   name: string
@@ -265,6 +280,7 @@ interface Plugin {
 ```
 
 ### Collaboration (Future)
+
 - CRDT for conflict resolution
 - WebSocket for real-time sync
 - Presence indicators
@@ -273,16 +289,19 @@ interface Plugin {
 ## Development Workflow
 
 1. **Feature Planning**
+
    - Define user stories
    - Design domain models
    - Plan test scenarios
 
 2. **TDD Implementation**
+
    - Write failing tests
    - Implement minimal code
    - Refactor with green tests
 
 3. **Integration**
+
    - Wire up UI components
    - Add visual feedback
    - Write integration tests
