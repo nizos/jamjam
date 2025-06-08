@@ -63,7 +63,7 @@ export function Canvas({
       onWheel={handleWheel}
     >
       <Layer>
-        <Grid />
+        <Grid width={width} height={height} />
       </Layer>
     </Stage>
   )
