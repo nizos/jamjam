@@ -44,7 +44,7 @@ describe('CoordinateTransformer', () => {
     })
 
     it('should account for zoom when transforming x-coordinate', () => {
-      canvas.zoomTo(2)
+      canvas.zoomTo(2, new Point(0, 0))
 
       const result = transformer.screenToCanvas(screenPoint)
 
@@ -84,7 +84,7 @@ describe('CoordinateTransformer', () => {
     })
 
     it('should account for zoom when transforming x-coordinate', () => {
-      canvas.zoomTo(2)
+      canvas.zoomTo(2, new Point(0, 0))
 
       const result = transformer.canvasToScreen(canvasPoint)
 

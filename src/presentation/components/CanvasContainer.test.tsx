@@ -50,6 +50,22 @@ describe('CanvasContainer', () => {
       expect(canvasState.zoom).toBe(1.1)
     })
   })
+
+  it('should use window dimensions for canvas', () => {
+    Object.defineProperty(window, 'innerWidth', {
+      value: 1920,
+      configurable: true,
+    })
+    Object.defineProperty(window, 'innerHeight', {
+      value: 1080,
+      configurable: true,
+    })
+
+    const { container } = render(<CanvasContainer />)
+    const stage = container.querySelector('[role="presentation"]')
+
+    expect(stage).toHaveStyle({ width: '1920px', height: '1080px' })
+  })
 })
 
 function setupCanvasContainer(width = 800, height = 600) {

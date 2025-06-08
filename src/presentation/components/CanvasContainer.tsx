@@ -15,8 +15,15 @@ export function CanvasContainer() {
     factor: number
     position: { x: number; y: number }
   }) => {
-    zoomTo(zoom * event.factor)
+    zoomTo(zoom * event.factor, new Point(event.position.x, event.position.y))
   }
 
-  return <Canvas onPan={handlePan} onZoom={handleZoom} />
+  return (
+    <Canvas
+      width={window.innerWidth}
+      height={window.innerHeight}
+      onPan={handlePan}
+      onZoom={handleZoom}
+    />
+  )
 }

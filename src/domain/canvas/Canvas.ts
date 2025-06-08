@@ -13,8 +13,22 @@ export class Canvas {
     )
   }
 
-  zoomTo(factor: number): void {
-    // TODO: Implement zoom around center point
+  zoomTo(
+    factor: number,
+    point: Point = new Point(this.viewport.width / 2, this.viewport.height / 2)
+  ): void {
+    // Calculate the scale change
+    const scaleChange = factor / this.zoom
+
+    // Calculate new position to keep the zoom point stationary
+    const newX = point.x - (point.x - this.viewport.position.x) * scaleChange
+    const newY = point.y - (point.y - this.viewport.position.y) * scaleChange
+
+    this.viewport = new Viewport(
+      new Point(newX, newY),
+      this.viewport.width,
+      this.viewport.height
+    )
     this.zoom = factor
   }
 

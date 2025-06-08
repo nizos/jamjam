@@ -5,7 +5,7 @@ import { Point } from '../../domain/canvas/Point'
 interface CanvasState {
   canvas: Canvas
   pan: (offset: Point) => void
-  zoomTo: (level: number) => void
+  zoomTo: (level: number, point?: Point) => void
   reset: () => void
 }
 
@@ -16,9 +16,9 @@ export const useCanvasStore = create<CanvasState>((set) => ({
       state.canvas.pan(offset)
       return { canvas: state.canvas }
     }),
-  zoomTo: (level: number) =>
+  zoomTo: (level: number, point?: Point) =>
     set((state) => {
-      state.canvas.zoomTo(level)
+      state.canvas.zoomTo(level, point)
       return { canvas: state.canvas }
     }),
   reset: () => set(() => ({ canvas: new Canvas() })),
