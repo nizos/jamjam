@@ -1,11 +1,37 @@
 import { Line } from 'react-konva'
 
-export function Grid() {
-  return (
-    <>
-      <Line points={[0, 0, 100, 0]} stroke="#e0e0e0" />
-      <Line points={[0, 20, 100, 20]} stroke="#e0e0e0" />
-      <Line points={[0, 0, 0, 100]} stroke="#e0e0e0" />
-    </>
-  )
+interface GridProps {
+  width?: number
+  height?: number
+  size?: number
+}
+
+export function Grid({ width = 800, height = 600, size = 20 }: GridProps) {
+  const lines = []
+
+  // Horizontal lines
+  for (let y = 0; y <= height; y += size) {
+    lines.push(
+      <Line
+        key={`h-${y}`}
+        points={[0, y, width, y]}
+        stroke="#e0e0e0"
+        strokeWidth={1}
+      />
+    )
+  }
+
+  // Vertical lines
+  for (let x = 0; x <= width; x += size) {
+    lines.push(
+      <Line
+        key={`v-${x}`}
+        points={[x, 0, x, height]}
+        stroke="#e0e0e0"
+        strokeWidth={1}
+      />
+    )
+  }
+
+  return <>{lines}</>
 }
