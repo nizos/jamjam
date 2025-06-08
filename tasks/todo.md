@@ -12,10 +12,10 @@
 
 ### State Management
 
-- [ ] Create canvas store with Zustand
-- [ ] Implement canvas actions (pan, zoom, reset)
+- [x] Create canvas store with Zustand
+- [x] Implement canvas actions (pan, zoom, reset)
 - [ ] Add viewport state management
-- [ ] Create store tests
+- [x] Create store tests
 
 ### UI Layer
 
