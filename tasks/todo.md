@@ -8,7 +8,7 @@
 - [x] Create CanvasObject base interface and tests
 - [x] Implement Canvas domain model with pan/zoom logic
 - [x] Create coordinate transformation utilities
-- [ ] Implement viewport calculations
+- [x] Implement viewport calculations
 
 ### State Management
 
