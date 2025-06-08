@@ -2,6 +2,7 @@ import { Stage, Layer } from 'react-konva'
 import { useCanvasStore } from '../../infrastructure/stores/CanvasStore'
 import type Konva from 'konva'
 import { Grid } from './Grid'
+import { useState } from 'react'
 
 interface CanvasProps {
   width?: number
@@ -20,13 +21,24 @@ export function Canvas({
   onZoom,
 }: CanvasProps) {
   const canvas = useCanvasStore((state) => state.canvas)
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
 
   const handleDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
     if (onPan) {
       const stage = e.target as Konva.Stage
       const position = stage.position()
       onPan(position)
+      setDragOffset({ x: 0, y: 0 })
     }
+  }
+
+  const handleDragMove = (e: Konva.KonvaEventObject<DragEvent>) => {
+    const stage = e.target as Konva.Stage
+    const position = stage.position()
+    setDragOffset({
+      x: position.x - canvas.viewport.position.x,
+      y: position.y - canvas.viewport.position.y,
+    })
   }
 
   const handleWheel = (e: Konva.KonvaEventObject<WheelEvent>) => {
@@ -60,10 +72,17 @@ export function Canvas({
       scaleY={canvas.zoom}
       draggable
       onDragEnd={handleDragEnd}
+      onDragMove={handleDragMove}
       onWheel={handleWheel}
     >
       <Layer>
-        <Grid width={width} height={height} />
+        <Grid
+          width={width}
+          height={height}
+          offsetX={canvas.viewport.position.x + dragOffset.x}
+          offsetY={canvas.viewport.position.y + dragOffset.y}
+          zoom={canvas.zoom}
+        />
       </Layer>
     </Stage>
   )

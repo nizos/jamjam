@@ -120,6 +120,35 @@ describe('Canvas', () => {
     const lines = stage.find('Line')
     expect(lines.length).toBeGreaterThan(0)
   })
+
+  describe('drag move interaction', () => {
+    it('should not call onPan during drag move', () => {
+      // Start dragging
+      stage.fire('dragstart')
+
+      // Move to a new position
+      stage.position({ x: 100, y: 50 })
+      stage.fire('dragmove')
+
+      // onPan should NOT be called during drag move
+      expect(onPan).not.toHaveBeenCalled()
+    })
+
+    it('should call onPan only when drag ends', () => {
+      // Start dragging
+      stage.fire('dragstart')
+
+      // Move to a new position
+      stage.position({ x: 100, y: 50 })
+      stage.fire('dragmove')
+
+      // End drag
+      stage.fire('dragend')
+
+      // onPan should be called with final position
+      expect(onPan).toHaveBeenCalledWith({ x: 100, y: 50 })
+    })
+  })
 })
 
 function setupCanvas(width = 800, height = 600) {
