@@ -33,6 +33,8 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
+      'no-extra-semi': 'off', // Let Prettier handle semicolons
+      semi: 'off', // Let Prettier handle semicolons
     },
   },
   {
