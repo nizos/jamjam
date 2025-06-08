@@ -75,6 +75,7 @@ This is a FigJam project that will be developed with Claude Code assistance usin
 - **Focus commit messages on WHAT was introduced**, not the process (TDD is assumed)
 - **Keep commits atomic** - each commit should represent one logical change
 - **Write clear, concise commit messages** that explain the change, not the method
+- **Don't mention tests in commit messages** - comprehensive tests are assumed for all features
 
 ### Code Style
 
