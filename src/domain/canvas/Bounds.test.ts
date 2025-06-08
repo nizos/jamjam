@@ -4,199 +4,206 @@ import { Point } from './Point'
 import { Size } from './Size'
 
 describe('Bounds', () => {
-  it('should create bounds from position and size', () => {
-    const position = new Point(10, 20)
-    const size = new Size(100, 50)
-    const bounds = new Bounds(position, size)
+  // Default test bounds: position (10, 20), size 100x50
+  const createBounds = (x = 10, y = 20, width = 100, height = 50) =>
+    new Bounds(new Point(x, y), new Size(width, height))
 
-    expect(bounds.position).toBe(position)
-    expect(bounds.size).toBe(size)
+  const getCenter = (bounds: Bounds): Point =>
+    new Point(
+      bounds.position.x + bounds.size.width / 2,
+      bounds.position.y + bounds.size.height / 2
+    )
+
+  describe('construction', () => {
+    it('should create bounds from position and size', () => {
+      const position = new Point(10, 20)
+      const size = new Size(100, 50)
+      const bounds = new Bounds(position, size)
+
+      expect(bounds.position).toBe(position)
+      expect(bounds.size).toBe(size)
+    })
+
+    it('should handle bounds with zero dimensions', () => {
+      const bounds = createBounds(10, 20, 0, 0)
+
+      expect(bounds.position).toEqual(new Point(10, 20))
+      expect(bounds.size).toEqual(new Size(0, 0))
+    })
+
+    it('should handle bounds at origin', () => {
+      const bounds = createBounds(0, 0, 100, 50)
+
+      expect(bounds.position).toEqual(new Point(0, 0))
+      expect(bounds.topLeft()).toEqual(new Point(0, 0))
+      expect(bounds.bottomRight()).toEqual(new Point(100, 50))
+    })
   })
 
   describe('contains', () => {
-    const bounds = new Bounds(new Point(10, 20), new Size(100, 50))
+    const bounds = createBounds() // Default: position (10, 20), size 100x50
 
-    it.each([
-      { point: new Point(50, 40), expected: true, description: 'inside point' },
-      {
-        point: new Point(5, 40),
-        expected: false,
-        description: 'left of bounds',
-      },
-      {
-        point: new Point(120, 40),
-        expected: false,
-        description: 'right of bounds',
-      },
-      {
-        point: new Point(50, 10),
-        expected: false,
-        description: 'above bounds',
-      },
-      {
-        point: new Point(50, 80),
-        expected: false,
-        description: 'below bounds',
-      },
-      // Corners
-      {
-        point: new Point(10, 20),
-        expected: true,
-        description: 'top-left corner',
-      },
-      {
-        point: new Point(110, 20),
-        expected: true,
-        description: 'top-right corner',
-      },
-      {
-        point: new Point(10, 70),
-        expected: true,
-        description: 'bottom-left corner',
-      },
-      {
-        point: new Point(110, 70),
-        expected: true,
-        description: 'bottom-right corner',
-      },
-      // Edges
-      { point: new Point(60, 20), expected: true, description: 'top edge' },
-      { point: new Point(60, 70), expected: true, description: 'bottom edge' },
-      { point: new Point(10, 45), expected: true, description: 'left edge' },
-      { point: new Point(110, 45), expected: true, description: 'right edge' },
-    ])('should return $expected for $description', ({ point, expected }) => {
-      expect(bounds.contains(point)).toBe(expected)
+    describe('points inside bounds', () => {
+      it.each([
+        { point: new Point(50, 40), description: 'center point' },
+        { point: new Point(10, 20), description: 'top-left corner' },
+        { point: new Point(110, 20), description: 'top-right corner' },
+        { point: new Point(10, 70), description: 'bottom-left corner' },
+        { point: new Point(110, 70), description: 'bottom-right corner' },
+        { point: new Point(60, 20), description: 'top edge' },
+        { point: new Point(60, 70), description: 'bottom edge' },
+        { point: new Point(10, 45), description: 'left edge' },
+        { point: new Point(110, 45), description: 'right edge' },
+      ])('should contain $description', ({ point }) => {
+        expect(bounds.contains(point)).toBe(true)
+      })
+    })
+
+    describe('points outside bounds', () => {
+      it.each([
+        { point: new Point(5, 40), description: 'left of bounds' },
+        { point: new Point(120, 40), description: 'right of bounds' },
+        { point: new Point(50, 10), description: 'above bounds' },
+        { point: new Point(50, 80), description: 'below bounds' },
+        { point: new Point(0, 0), description: 'far top-left' },
+        { point: new Point(200, 200), description: 'far bottom-right' },
+      ])('should not contain $description', ({ point }) => {
+        expect(bounds.contains(point)).toBe(false)
+      })
+    })
+
+    it('should handle zero-sized bounds', () => {
+      const zeroBounds = createBounds(10, 20, 0, 0)
+
+      // Only the exact position should be contained
+      expect(zeroBounds.contains(new Point(10, 20))).toBe(true)
+      expect(zeroBounds.contains(new Point(10.1, 20))).toBe(false)
+      expect(zeroBounds.contains(new Point(10, 20.1))).toBe(false)
     })
   })
 
   describe('corner calculations', () => {
-    const bounds = new Bounds(new Point(10, 20), new Size(100, 50))
+    const bounds = createBounds() // Default: position (10, 20), size 100x50
 
-    it.each([
-      { method: 'topLeft' as const, expectedX: 10, expectedY: 20 },
-      { method: 'topRight' as const, expectedX: 110, expectedY: 20 },
-      { method: 'bottomLeft' as const, expectedX: 10, expectedY: 70 },
-      { method: 'bottomRight' as const, expectedX: 110, expectedY: 70 },
-    ])(
-      'should calculate $method corner correctly',
-      ({ method, expectedX, expectedY }) => {
-        const corner = bounds[method]()
-        expect(corner.x).toBe(expectedX)
-        expect(corner.y).toBe(expectedY)
-      }
-    )
+    it('should calculate all corners correctly', () => {
+      expect(bounds.topLeft()).toEqual(new Point(10, 20))
+      expect(bounds.topRight()).toEqual(new Point(110, 20))
+      expect(bounds.bottomLeft()).toEqual(new Point(10, 70))
+      expect(bounds.bottomRight()).toEqual(new Point(110, 70))
+    })
   })
 
   describe('intersects', () => {
-    const bounds1 = new Bounds(new Point(10, 20), new Size(100, 50))
+    const bounds = createBounds() // Default: position (10, 20), size 100x50
 
-    it.each([
-      {
-        other: new Bounds(new Point(50, 40), new Size(80, 60)),
-        expected: true,
-        description: 'overlapping bounds',
-      },
-      {
-        other: new Bounds(new Point(0, 0), new Size(5, 5)),
-        expected: false,
-        description: 'completely separate bounds (top-left)',
-      },
-      {
-        other: new Bounds(new Point(120, 80), new Size(50, 30)),
-        expected: false,
-        description: 'completely separate bounds (bottom-right)',
-      },
-      {
-        other: new Bounds(new Point(110, 20), new Size(50, 50)),
-        expected: false,
-        description: 'adjacent bounds (right edge)',
-      },
-      {
-        other: new Bounds(new Point(10, 70), new Size(100, 50)),
-        expected: false,
-        description: 'adjacent bounds (bottom edge)',
-      },
-      {
-        other: new Bounds(new Point(10, 20), new Size(100, 50)),
-        expected: true,
-        description: 'identical bounds',
-      },
-      {
-        other: new Bounds(new Point(20, 30), new Size(50, 20)),
-        expected: true,
-        description: 'fully contained bounds',
-      },
-      {
-        other: new Bounds(new Point(0, 0), new Size(200, 100)),
-        expected: true,
-        description: 'containing bounds',
-      },
-      {
-        other: new Bounds(new Point(109, 69), new Size(10, 10)),
-        expected: true,
-        description: 'corner overlap (bottom-right)',
-      },
-    ])('should return $expected for $description', ({ other, expected }) => {
-      expect(bounds1.intersects(other)).toBe(expected)
+    describe('intersecting bounds', () => {
+      it.each([
+        { other: createBounds(50, 40, 80, 60), description: 'partial overlap' },
+        {
+          other: createBounds(10, 20, 100, 50),
+          description: 'identical bounds',
+        },
+        { other: createBounds(20, 30, 50, 20), description: 'fully contained' },
+        {
+          other: createBounds(0, 0, 200, 100),
+          description: 'fully containing',
+        },
+        { other: createBounds(109, 69, 10, 10), description: 'corner overlap' },
+      ])('should intersect with $description', ({ other }) => {
+        expect(bounds.intersects(other)).toBe(true)
+        expect(other.intersects(bounds)).toBe(true) // Verify symmetry
+      })
+    })
+
+    describe('non-intersecting bounds', () => {
+      it.each([
+        { other: createBounds(0, 0, 5, 5), description: 'far top-left' },
+        {
+          other: createBounds(120, 80, 50, 30),
+          description: 'far bottom-right',
+        },
+        { other: createBounds(110, 20, 50, 50), description: 'adjacent right' },
+        {
+          other: createBounds(10, 70, 100, 50),
+          description: 'adjacent bottom',
+        },
+      ])('should not intersect with $description', ({ other }) => {
+        expect(bounds.intersects(other)).toBe(false)
+        expect(other.intersects(bounds)).toBe(false) // Verify symmetry
+      })
     })
   })
 
   describe('translate', () => {
-    it('should move bounds by a given offset', () => {
-      const bounds = new Bounds(new Point(10, 20), new Size(100, 50))
-      const offset = new Point(15, 25)
+    const bounds = createBounds() // Default: position (10, 20), size 100x50
 
-      const translated = bounds.translate(offset)
+    it('should move bounds by positive offset', () => {
+      const translated = bounds.translate(new Point(15, 25))
 
-      expect(translated.position.x).toBe(25)
-      expect(translated.position.y).toBe(45)
-      expect(translated.size.width).toBe(100)
-      expect(translated.size.height).toBe(50)
+      expect(translated.position).toEqual(new Point(25, 45))
+      expect(translated.size).toEqual(new Size(100, 50))
     })
 
-    it('should return a new Bounds instance (immutability)', () => {
-      const bounds = new Bounds(new Point(10, 20), new Size(100, 50))
-      const offset = new Point(15, 25)
+    it('should move bounds by negative offset', () => {
+      const translated = bounds.translate(new Point(-5, -10))
 
-      const translated = bounds.translate(offset)
+      expect(translated.position).toEqual(new Point(5, 10))
+      expect(translated.size).toEqual(new Size(100, 50))
+    })
+
+    it('should handle zero offset', () => {
+      const translated = bounds.translate(new Point(0, 0))
+
+      expect(translated.position).toEqual(bounds.position)
+      expect(translated.size).toEqual(bounds.size)
+    })
+
+    it('should return a new instance (immutability)', () => {
+      const translated = bounds.translate(new Point(15, 25))
 
       expect(translated).not.toBe(bounds)
-      expect(bounds.position.x).toBe(10)
-      expect(bounds.position.y).toBe(20)
+      expect(bounds.position).toEqual(new Point(10, 20)) // Original unchanged
     })
   })
 
   describe('expand', () => {
-    it('should increase bounds size by given amount on all sides', () => {
-      const bounds = new Bounds(new Point(10, 20), new Size(100, 50))
+    const bounds = createBounds() // Default: position (10, 20), size 100x50
 
+    it('should expand bounds uniformly on all sides', () => {
       const expanded = bounds.expand(10)
 
-      expect(expanded.position.x).toBe(0)
-      expect(expanded.position.y).toBe(10)
-      expect(expanded.size.width).toBe(120)
-      expect(expanded.size.height).toBe(70)
+      expect(expanded.position).toEqual(new Point(0, 10))
+      expect(expanded.size).toEqual(new Size(120, 70))
     })
 
-    it('should contract bounds when given negative amount', () => {
-      const bounds = new Bounds(new Point(10, 20), new Size(100, 50))
-
+    it('should contract bounds with negative amount', () => {
       const contracted = bounds.expand(-5)
 
-      expect(contracted.position.x).toBe(15)
-      expect(contracted.position.y).toBe(25)
-      expect(contracted.size.width).toBe(90)
-      expect(contracted.size.height).toBe(40)
+      expect(contracted.position).toEqual(new Point(15, 25))
+      expect(contracted.size).toEqual(new Size(90, 40))
     })
 
-    it('should return a new Bounds instance (immutability)', () => {
-      const bounds = new Bounds(new Point(10, 20), new Size(100, 50))
+    it('should handle zero expansion', () => {
+      const unchanged = bounds.expand(0)
 
+      expect(unchanged.position).toEqual(bounds.position)
+      expect(unchanged.size).toEqual(bounds.size)
+    })
+
+    it('should maintain center point after expansion', () => {
+      const originalCenter = getCenter(bounds)
+      const expanded = bounds.expand(10)
+      const expandedCenter = getCenter(expanded)
+
+      expect(expandedCenter).toEqual(originalCenter)
+    })
+
+    it('should return a new instance (immutability)', () => {
       const expanded = bounds.expand(10)
 
       expect(expanded).not.toBe(bounds)
-      expect(bounds.position.x).toBe(10)
-      expect(bounds.size.width).toBe(100)
+      expect(bounds.position).toEqual(new Point(10, 20)) // Original unchanged
+      expect(bounds.size).toEqual(new Size(100, 50)) // Original unchanged
     })
   })
 })
